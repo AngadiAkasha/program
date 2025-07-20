@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus AI Copilot - Enhanced Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="college-logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h2>Campus AI Copilot</h2>
+            <div class="loading-spinner"></div>
+            <p>Initializing your campus assistant...</p>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="main-app" class="main-app hidden">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Campus AI Copilot</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="status-indicator">
+                        <div class="status-dot online"></div>
+                        <span>Online</span>
+                    </div>
+                    <div class="weather-widget" id="weather-widget">
+                        <i class="fas fa-sun"></i>
+                        <span>72°F</span>
+                    </div>
+                    <button class="theme-toggle" id="theme-toggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="app-container">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-header">
+                    <h3>Campus Tools</h3>
+                    <button class="sidebar-toggle" id="sidebar-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+                
+                <nav class="sidebar-nav">
+                    <div class="nav-section">
+                        <h4>Quick Actions</h4>
+                        <button class="nav-item active" data-tool="chat">
+                            <i class="fas fa-comments"></i>
+                            <span>AI Chat</span>
+                        </button>
+                        <button class="nav-item" data-tool="gpa">
+                            <i class="fas fa-calculator"></i>
+                            <span>GPA Calculator</span>
+                        </button>
+                        <button class="nav-item" data-tool="schedule">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Class Schedule</span>
+                        </button>
+                        <button class="nav-item" data-tool="map">
+                            <i class="fas fa-map-marked-alt"></i>
+                            <span>Campus Map</span>
+                        </button>
+                    </div>
+                    
+                    <div class="nav-section">
+                        <h4>Study Tools</h4>
+                        <button class="nav-item" data-tool="timer">
+                            <i class="fas fa-stopwatch"></i>
+                            <span>Study Timer</span>
+                        </button>
+                        <button class="nav-item" data-tool="progress">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Progress Tracker</span>
+                        </button>
+                        <button class="nav-item" data-tool="library">
+                            <i class="fas fa-book"></i>
+                            <span>Library Status</span>
+                        </button>
+                    </div>
+                </nav>
+
+                <!-- Live Stats Widget -->
+                <div class="stats-widget">
+                    <h4>Today's Stats</h4>
+                    <div class="stat-item">
+                        <span class="stat-label">Study Time</span>
+                        <span class="stat-value" id="study-time">2h 15m</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Messages</span>
+                        <span class="stat-value" id="message-count">0</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Chat Area -->
+            <main class="main-content">
+                <!-- Chat Tool -->
+                <div class="tool-panel active" id="chat-tool">
+                    <div class="chat-header">
+                        <div class="chat-info">
+                            <h2>AI Campus Assistant</h2>
+                            <div class="typing-indicator hidden" id="typing-indicator">
+                                <span>AI is typing</span>
+                                <div class="typing-dots">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-actions">
+                            <button class="action-btn" id="voice-btn" title="Voice Input">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <button class="action-btn" id="clear-chat" title="Clear Chat">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chat-messages">
+                            <div class="message ai-message">
+                                <div class="message-avatar">
+                                    <i class="fas fa-robot"></i>
+                                </div>
+                                <div class="message-content">
+                                    <div class="message-text">
+                                        Hello! I'm your Campus AI Copilot. I can help you with academics, campus information, study planning, and much more. What would you like to know?
+                                    </div>
+                                    <div class="message-time">Just now</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-container">
+                        <div class="input-wrapper">
+                            <input type="text" 
+                                   id="message-input" 
+                                   placeholder="Ask me anything about campus life, studies, or academics..."
+                                   class="form-control">
+                            <div class="input-actions">
+                                <button class="input-btn" id="attach-btn" title="Attach File">
+                                    <i class="fas fa-paperclip"></i>
+                                </button>
+                                <button class="input-btn" id="emoji-btn" title="Add Emoji">
+                                    <i class="fas fa-smile"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button class="send-btn" id="send-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- GPA Calculator Tool -->
+                <div class="tool-panel" id="gpa-tool">
+                    <div class="tool-header">
+                        <h2>GPA Calculator</h2>
+                        <p>Calculate your semester and cumulative GPA</p>
+                    </div>
+                    <div class="gpa-calculator">
+                        <div class="course-input-section">
+                            <h3>Add Courses</h3>
+                            <div class="course-input-grid">
+                                <input type="text" placeholder="Course Name" id="course-name" class="form-control">
+                                <input type="number" placeholder="Credits" id="course-credits" min="1" max="6" class="form-control">
+                                <select id="course-grade" class="form-control">
+                                    <option value="">Select Grade</option>
+                                    <option value="4.0">A (4.0)</option>
+                                    <option value="3.7">A- (3.7)</option>
+                                    <option value="3.3">B+ (3.3)</option>
+                                    <option value="3.0">B (3.0)</option>
+                                    <option value="2.7">B- (2.7)</option>
+                                    <option value="2.3">C+ (2.3)</option>
+                                    <option value="2.0">C (2.0)</option>
+                                    <option value="1.7">C- (1.7)</option>
+                                    <option value="1.3">D+ (1.3)</option>
+                                    <option value="1.0">D (1.0)</option>
+                                    <option value="0.0">F (0.0)</option>
+                                </select>
+                                <button class="btn btn--primary" id="add-course">Add Course</button>
+                            </div>
+                        </div>
+                        
+                        <div class="courses-list" id="courses-list"></div>
+                        
+                        <div class="gpa-results">
+                            <div class="gpa-display">
+                                <div class="gpa-item">
+                                    <span class="gpa-label">Current GPA</span>
+                                    <span class="gpa-value" id="current-gpa">0.00</span>
+                                </div>
+                                <div class="gpa-item">
+                                    <span class="gpa-label">Total Credits</span>
+                                    <span class="gpa-value" id="total-credits">0</span>
+                                </div>
+                            </div>
+                            <canvas id="gpa-chart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Schedule Tool -->
+                <div class="tool-panel" id="schedule-tool">
+                    <div class="tool-header">
+                        <h2>Class Schedule</h2>
+                        <p>Manage your weekly class schedule</p>
+                    </div>
+                    <div class="schedule-container">
+                        <div class="schedule-grid" id="schedule-grid">
+                            <!-- Schedule grid will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campus Map Tool -->
+                <div class="tool-panel" id="map-tool">
+                    <div class="tool-header">
+                        <h2>Campus Map</h2>
+                        <p>Find buildings, services, and facilities on campus</p>
+                    </div>
+                    <div class="map-container">
+                        <div class="map-search">
+                            <input type="text" placeholder="Search for buildings, departments..." class="form-control">
+                            <button class="btn btn--primary">Search</button>
+                        </div>
+                        <div class="campus-map">
+                            <div class="map-placeholder">
+                                <i class="fas fa-map-marked-alt"></i>
+                                <p>Interactive Campus Map</p>
+                                <small>Click on buildings for more information</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Study Timer Tool -->
+                <div class="tool-panel" id="timer-tool">
+                    <div class="tool-header">
+                        <h2>Study Timer</h2>
+                        <p>Pomodoro technique and custom study sessions</p>
+                    </div>
+                    <div class="timer-container">
+                        <div class="timer-display" id="timer-display">
+                            <div class="time-remaining">25:00</div>
+                            <div class="timer-label">Focus Session</div>
+                        </div>
+                        <div class="timer-controls">
+                            <button class="btn btn--primary" id="start-timer">Start</button>
+                            <button class="btn btn--secondary" id="pause-timer">Pause</button>
+                            <button class="btn btn--outline" id="reset-timer">Reset</button>
+                        </div>
+                        <div class="timer-presets">
+                            <button class="preset-btn" data-time="25">Pomodoro (25m)</button>
+                            <button class="preset-btn" data-time="15">Short (15m)</button>
+                            <button class="preset-btn" data-time="45">Long (45m)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Tracker Tool -->
+                <div class="tool-panel" id="progress-tool">
+                    <div class="tool-header">
+                        <h2>Progress Tracker</h2>
+                        <p>Track your academic progress and achievements</p>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-stats">
+                            <div class="progress-card">
+                                <h3>Study Streak</h3>
+                                <div class="progress-value">7 days</div>
+                            </div>
+                            <div class="progress-card">
+                                <h3>Assignments</h3>
+                                <div class="progress-value">12/15</div>
+                            </div>
+                            <div class="progress-card">
+                                <h3>Goals Met</h3>
+                                <div class="progress-value">85%</div>
+                            </div>
+                        </div>
+                        <canvas id="progress-chart" width="400" height="300"></canvas>
+                    </div>
+                </div>
+
+                <!-- Library Status Tool -->
+                <div class="tool-panel" id="library-tool">
+                    <div class="tool-header">
+                        <h2>Library Status</h2>
+                        <p>Check availability and book study spaces</p>
+                    </div>
+                    <div class="library-container">
+                        <div class="library-stats">
+                            <div class="library-stat">
+                                <span class="stat-icon"><i class="fas fa-users"></i></span>
+                                <div class="stat-info">
+                                    <span class="stat-title">Current Occupancy</span>
+                                    <span class="stat-value">67/120</span>
+                                </div>
+                            </div>
+                            <div class="library-stat">
+                                <span class="stat-icon"><i class="fas fa-clock"></i></span>
+                                <div class="stat-info">
+                                    <span class="stat-title">Hours Today</span>
+                                    <span class="stat-value">7AM - 11PM</span>
+                                </div>
+                            </div>
+                            <div class="library-stat">
+                                <span class="stat-icon"><i class="fas fa-wifi"></i></span>
+                                <div class="stat-info">
+                                    <span class="stat-title">WiFi Status</span>
+                                    <span class="stat-value">Excellent</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="study-rooms">
+                            <h3>Study Rooms</h3>
+                            <div class="rooms-grid" id="study-rooms">
+                                <!-- Study rooms will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Notification System -->
+        <div id="notifications" class="notifications-container"></div>
+
+        <!-- File Upload Modal -->
+        <div id="file-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Upload File</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="file-drop-zone" id="file-drop-zone">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Drag and drop files here or click to browse</p>
+                        <input type="file" id="file-input" multiple accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Particle Background -->
+    <div class="particles" id="particles"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
